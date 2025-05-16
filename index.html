@@ -443,7 +443,6 @@ function gtag_report_conversion(url) {
 </head>
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
-<!---谷歌翻译Start--->
 <!-- 右上角语言切换器 -->
 <div id="custom-lang-switch" style="
   position: fixed;
@@ -456,14 +455,14 @@ function gtag_report_conversion(url) {
   padding: 6px 10px;
   font-family: sans-serif;
 ">
-  <select onchange="translateLanguage(this.value)" style="
+  <select id="langSelector" style="
     font-size: 14px;
     border: none;
     background: transparent;
     outline: none;
     cursor: pointer;
   ">
-    <option value="">🌐 SelectLanguage</option>
+    <option value="">🌐 Select-Language</option>
     <option value="zh-CN">🇨🇳 中文</option>
     <option value="lo">🇱🇦 ພາສາລາວ</option>
     <option value="th">🇹🇭 ภาษาไทย</option>
@@ -480,26 +479,46 @@ function gtag_report_conversion(url) {
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
-      pageLanguage: 'zh-CN', // 网页默认语言为中文
+      pageLanguage: 'zh-CN',
       includedLanguages: 'zh-CN,lo,th,en,vi,hmn',
       layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
       autoDisplay: false
     }, 'google_translate_element');
   }
 
-  function translateLanguage(lang) {
-    const gtCombo = document.querySelector('.goog-te-combo');
-    if (gtCombo) {
-      gtCombo.value = lang;
-      gtCombo.dispatchEvent(new Event('change'));
+  // 等待 Google 翻译 select 准备好
+  function waitForTranslateCombo(lang) {
+    const maxWait = 5000; // 最多等5秒
+    const start = Date.now();
+
+    function trySetLang() {
+      const gtCombo = document.querySelector('.goog-te-combo');
+      if (gtCombo) {
+        gtCombo.value = lang;
+        gtCombo.dispatchEvent(new Event('change'));
+      } else {
+        if (Date.now() - start < maxWait) {
+          setTimeout(trySetLang, 100);
+        } else {
+          console.warn("Google 翻译组件加载失败。");
+        }
+      }
     }
+
+    trySetLang();
   }
+
+  // 切换语言时调用
+  document.getElementById("langSelector").addEventListener("change", function () {
+    const lang = this.value;
+    if (lang) waitForTranslateCombo(lang);
+  });
 </script>
 
-<!-- 加载 Google 翻译组件 -->
+<!-- 加载 Google 翻译 -->
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- 可选：隐藏 Google logo（测试用途） -->
+<!-- 隐藏 Google logo（仅测试用途） -->
 <style>
   .goog-logo-link,
   .goog-te-gadget span {
