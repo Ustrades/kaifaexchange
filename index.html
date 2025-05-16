@@ -444,96 +444,81 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!-- 🌐Hmooob 右上角语言切换器 -->
-<div id="custom-lang-switch" style="
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 9999;
-  background: #ffffffee;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  padding: 4px 10px;
-  font-family: sans-serif;
-">
-  <select id="langSelector" style="
-    font-size: 14px;
-    border: none;
-    background: transparent;
-    outline: none;
-    cursor: pointer;
-  ">
-    <option value="">🌐Select-Language</option>
-    <option value="zh-CN">🇨🇳 中文</option>
-    <option value="lo">🇱🇦 老挝语</option>
-    <option value="th">🇹🇭 泰语</option>
-    <option value="en">🇺🇸 英语</option>
-    <option value="vi">🇻🇳 越南语</option>
-    <option value="hi">🇮🇳 印地语</option>
+<!-- 语言切换器容器 -->
+<div id="language-switcher" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
+  <select id="language-select" onchange="translatePage(this.value)">
+    <option value="en" data-flag="🇺🇳">English</option>
+    <option value="lo" data-flag="🇱🇦">ພາສາລາວ</option>
+    <option value="th" data-flag="🇹🇭">ภาษาไทย</option>
+    <option value="vi" data-flag="🇻🇳">Tiếng Việt</option>
+    <option value="hi" data-flag="🇮🇳">हिन्दी</option>
   </select>
 </div>
 
-<!-- Google 翻译容器（隐藏） -->
-<div id="google_translate_element" style="display:none;"></div>
+<!-- 加载 Google 翻译 API -->
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- Google 翻译初始化 -->
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'zh-CN',
-      includedLanguages: 'zh-CN,lo,th,en,vi,hi',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element');
+<script>
+// 初始化 Google 翻译
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en', // 默认语言
+    includedLanguages: 'en,lo,th,vi,hi', // 支持的语言
+    autoDisplay: true // 打开页面自动显示语言选择
+  }, 'google_translate_element');
+}
+
+// 动态翻译页面
+function translatePage(lang) {
+  var select = document.getElementById('language-select');
+  var flag = select.options[select.selectedIndex].getAttribute('data-flag');
+  select.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text x="0" y="15" font-size="15">${flag}</text></svg>')`;
+  var iframe = document.getElementsByTagName('iframe')[0];
+  if (iframe) {
+    iframe.contentWindow.postMessage('{"method":"set","key":"language","value":"' + lang + '"}', '*');
   }
+}
 
-  // 自动触发翻译
-  function triggerTranslation(langCode) {
-    const interval = setInterval(() => {
-      const iframe = document.querySelector('iframe.goog-te-menu-frame');
-      if (!iframe) return;
+// 响应式样式和国旗显示
+document.addEventListener('DOMContentLoaded', function() {
+  var select = document.getElementById('language-select');
+  select.style.padding = '5px 30px 5px 10px';
+  select.style.backgroundSize = '20px';
+  select.style.backgroundRepeat = 'no-repeat';
+  select.style.backgroundPosition = 'right 5px center';
+  select.style.borderRadius = '5px';
+  select.style.fontSize = '16px';
+  select.style.cursor = 'pointer';
 
-      const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-      if (!innerDoc) return;
+  // 自动弹出语言选择
+  select.focus();
+  select.click();
 
-      const langLinks = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
-      for (let i = 0; i < langLinks.length; i++) {
-        const text = langLinks[i].innerText || langLinks[i].textContent;
-        const value = langLinks[i].closest('.goog-te-menu2-item').getAttribute('value');
-        if (value === langCode) {
-          langLinks[i].click();
-          clearInterval(interval);
-          return;
-        }
-      }
-    }, 300);
+  // 移动端优化
+  if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    select.style.fontSize = '14px';
+    select.style.padding = '8px 25px 8px 8px';
   }
-
-  // 监听语言选择
-  document.getElementById("langSelector").addEventListener("change", function () {
-    const lang = this.value;
-    if (!lang) return;
-    triggerTranslation(lang);
-  });
+});
 </script>
 
-<!-- 加载 Google 翻译脚本 -->
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-<!-- 隐藏 Google logo（可选） -->
 <style>
-  .goog-logo-link,
-  .goog-te-gadget span {
-    display: none !important;
-  }
-  .goog-te-banner-frame.skiptranslate {
-    display: none !important;
-  }
-  body {
-    top: 0px !important;
-  }
-  .goog-te-gadget {
-    font-size: 0;
-    color: transparent;
-  }
+/* 确保跨设备一致性 */
+#language-switcher {
+  font-family: Arial, sans-serif;
+}
+#language-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+#language-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
 </style>
 
 
