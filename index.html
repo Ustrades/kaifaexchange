@@ -444,19 +444,9 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!-- 🌐Hmooob 右上角语言切换器 -->
-<!-- 🌐 简洁右上角语言选择 -->
-<div style="
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 9999;
-  background: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.2);
-  font-family: sans-serif;
-">
-  <select id="langSwitcher" onchange="translatePage(this.value)" style="font-size: 14px;">
+<!-- 🌐 简单语言切换菜单 -->
+<div style="position:fixed; top:10px; left:10px; z-index:9999; background:#fff; padding:5px 10px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.2); font-family:sans-serif;">
+  <select onchange="translatePage(this.value)" style="border:none; font-size:14px; cursor:pointer;">
     <option value="">🌐 Language</option>
     <option value="en">🇺🇸 英语</option>
     <option value="lo">🇱🇦 老挝语</option>
@@ -467,11 +457,11 @@ function gtag_report_conversion(url) {
   </select>
 </div>
 
-<!-- Google 翻译容器（隐藏） -->
-<div id="google_translate_element" style="display: none;"></div>
+<!-- 隐藏 Google 翻译容器 -->
+<div id="google_translate_element" style="display:none;"></div>
 
-<!-- Google 翻译初始化 -->
-<script>
+<!-- Google 翻译脚本初始化 -->
+<script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'zh-CN',
@@ -486,28 +476,25 @@ function gtag_report_conversion(url) {
       if (!iframe) return;
 
       const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-      const items = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
-      for (let item of items) {
-        const parent = item.closest('.goog-te-menu2-item');
-        const val = parent?.getAttribute('value');
-        if (val === lang) {
+      const langItems = innerDoc.querySelectorAll('.goog-te-menu2-item');
+
+      langItems.forEach(item => {
+        if (item.getAttribute('value') === lang) {
           item.click();
           clearInterval(interval);
-          break;
         }
-      }
+      });
     }, 300);
   }
 </script>
 
-<!-- 加载 Google 翻译 -->
+<!-- 加载 Google 翻译服务 -->
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- 可选：隐藏 Google logo 和横幅 -->
+<!-- 可选：隐藏 Google Logo 和横幅 -->
 <style>
-  .goog-logo-link, .goog-te-gadget span {
-    display: none !important;
-  }
+  .goog-logo-link,
+  .goog-te-gadget span,
   .goog-te-banner-frame.skiptranslate {
     display: none !important;
   }
@@ -515,7 +502,6 @@ function gtag_report_conversion(url) {
     top: 0px !important;
   }
 </style>
-
 
 <!---谷歌翻译ENDbruce888-888--->
 
