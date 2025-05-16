@@ -455,17 +455,35 @@ function gtag_report_conversion(url) {
   </select>
 </div>
 
+<!-- 用于 Google 翻译的隐藏容器 -->
+<div id="google_translate_element" style="display: none;"></div>
+
 <!-- 加载 Google 翻译 API -->
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
 // 初始化 Google 翻译
 function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'en', // 默认语言
-    includedLanguages: 'en,lo,th,vi,hi', // 支持的语言
-    autoDisplay: true // 打开页面自动显示语言选择
-  }, 'google_translate_element');
+  // 确保 Google 翻译对象存在
+  if (typeof google !== 'undefined' && google.translate) {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en', // 默认语言
+      includedLanguages: 'en,lo,th,vi,hi', // 支持的语言
+      autoDisplay: true, // 自动显示语言选择
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+    
+    // 强制触发语言选择弹出
+    setTimeout(() => {
+      var select = document.getElementById('language-select');
+      select.focus();
+      select.dispatchEvent(new Event('click'));
+    }, 500);
+  } else {
+    console.error('Google Translate API failed to load.');
+    // 可选：显示错误提示给用户
+    alert('Failed to load translation service. Please check your network or try again later.');
+  }
 }
 
 // 动态翻译页面
@@ -473,37 +491,48 @@ function translatePage(lang) {
   var select = document.getElementById('language-select');
   var flag = select.options[select.selectedIndex].getAttribute('data-flag');
   select.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text x="0" y="15" font-size="15">${flag}</text></svg>')`;
-  var iframe = document.getElementsByTagName('iframe')[0];
-  if (iframe) {
-    iframe.contentWindow.postMessage('{"method":"set","key":"language","value":"' + lang + '"}', '*');
+  
+  // 触发 Google 翻译
+  var translateFrame = document.querySelector('iframe.goog-te-menu-frame');
+  if (translateFrame) {
+    translateFrame.contentWindow.postMessage('{"method":"set","key":"language","value":"' + lang + '"}', '*');
+  } else {
+    // 如果 iframe 未加载，尝试重新初始化
+    googleTranslateElementInit();
   }
 }
 
 // 响应式样式和国旗显示
 document.addEventListener('DOMContentLoaded', function() {
   var select = document.getElementById('language-select');
-  select.style.padding = '5px 30px 5px 10px';
+  select.style.padding = '8px 35px 8px 10px';
   select.style.backgroundSize = '20px';
   select.style.backgroundRepeat = 'no-repeat';
-  select.style.backgroundPosition = 'right 5px center';
-  select.style.borderRadius = '5px';
+  select.style.backgroundPosition = 'right 10px center';
+  select.style.borderRadius = '6px';
   select.style.fontSize = '16px';
   select.style.cursor = 'pointer';
-
-  // 自动弹出语言选择
-  select.focus();
-  select.click();
+  select.style.border = '1px solid #ccc';
+  select.style.backgroundColor = '#fff';
+  select.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
 
   // 移动端优化
   if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
     select.style.fontSize = '14px';
-    select.style.padding = '8px 25px 8px 8px';
+    select.style.padding = '10px 30px 10px 10px';
   }
+
+  // 监听 Google 翻译 API 加载状态
+  window.addEventListener('message', function(e) {
+    if (e.data && typeof e.data === 'string' && e.data.includes('googleTranslateElementInit')) {
+      translatePage('en'); // 默认翻译为英语
+    }
+  });
 });
 </script>
 
 <style>
-/* 确保跨设备一致性 */
+/* 跨设备一致性样式 */
 #language-switcher {
   font-family: Arial, sans-serif;
 }
@@ -511,13 +540,18 @@ document.addEventListener('DOMContentLoaded', function() {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
 }
 #language-select:focus {
   outline: none;
   border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0,123,255,0.5);
+}
+@media (max-width: 768px) {
+  #language-switcher {
+    top: 5px;
+    right: 5px;
+  }
 }
 </style>
 
