@@ -444,121 +444,56 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!---谷歌翻译Start--->
-<div id="google_translate_element" style="position: absolute; top: 10px; right: 10px; z-index: 1000;"></div>
+<!-- 挂载点：右上角语言选择器 -->
+<div id="google_translate_element" style="
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  padding: 6px 10px;
+  font-family: sans-serif;
+  font-size: 14px;
+"></div>
 
-<style>
-  /* 确保语言选择器在右上角，适配移动端和桌面端 */
-  #google_translate_element select {
-    padding: 5px;
-    font-size: 14px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    cursor: pointer;
-    max-width: 200px;
-  }
-
-  /* 优化移动端显示 */
-  @media screen and (max-width: 600px) {
-    #google_translate_element select {
-      font-size: 12px;
-      padding: 3px;
-      max-width: 150px;
-    }
-  }
-
-  /* 自定义下拉菜单选项，添加国旗 */
-  .goog-te-combo {
-    background-image: url('https://flagcdn.com/16x12/{flag}.png');
-    background-repeat: no-repeat;
-    background-position: 5px center;
-    padding-left: 25px;
-  }
-</style>
-
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<!-- 初始化 Google 翻译（内含全球语言） -->
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'af,am,ar,az,be,bg,bn,bs,ca,ceb,co,cs,cy,da,de,el,en,eo,es,et,eu,fa,fi,fr,fy,ga,gd,gl,gu,ha,he,hi,hmn,hr,ht,hu,hy,id,ig,is,it,iw,ja,jw,ka,kk,km,kn,ko,ku,ky,la,lb,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,no,ny,pa,pl,ps,pt,ro,ru,sd,si,sk,sl,sm,sn,so,sq,sr,st,su,sv,sw,ta,te,tg,th,tl,tr,uk,ur,uz,vi,xh,yi,yo,zh-CN,zh-TW,zu',
+      pageLanguage: 'zh-CN', // 如果你的网站默认是英文请改为 'en'
+      includedLanguages: '', // 留空表示启用所有支持语言
       layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
       autoDisplay: false
     }, 'google_translate_element');
-
-    // 动态添加国旗到下拉选项
-    const languages = [
-      {code: 'en', flag: 'gb', name: 'English (United Kingdom)'},
-      {code: 'es', flag: 'es', name: 'Spanish (Spain)'},
-      {code: 'zh-CN', flag: 'cn', name: 'Chinese (Simplified, China)'},
-      {code: 'zh-TW', flag: 'tw', name: 'Chinese (Traditional, Taiwan)'},
-      {code: 'hi', flag: 'in', name: 'Hindi (India)'},
-      {code: 'ar', flag: 'sa', name: 'Arabic (Saudi Arabia)'},
-      {code: 'fr', flag: 'fr', name: 'French (France)'},
-      {code: 'de', flag: 'de', name: 'German (Germany)'},
-      {code: 'ja', flag: 'jp', name: 'Japanese (Japan)'},
-      {code: 'ru', flag: 'ru', name: 'Russian (Russia)'},
-      {code: 'pt', flag: 'pt', name: 'Portuguese (Portugal)'},
-      {code: 'it', flag: 'it', name: 'Italian (Italy)'},
-      {code: 'ko', flag: 'kr', name: 'Korean (South Korea)'},
-      {code: 'nl', flag: 'nl', name: 'Dutch (Netherlands)'},
-      {code: 'sv', flag: 'se', name: 'Swedish (Sweden)'},
-      {code: 'tr', flag: 'tr', name: 'Turkish (Turkey)'},
-      {code: 'pl', flag: 'pl', name: 'Polish (Poland)'},
-      {code: 'vi', flag: 'vn', name: 'Vietnamese (Vietnam)'},
-      {code: 'th', flag: 'th', name: 'Thai (Thailand)'},
-      {code: 'id', flag: 'id', name: 'Indonesian (Indonesia)'},
-      {code: 'ms', flag: 'my', name: 'Malay (Malaysia)'},
-      {code: 'bn', flag: 'bd', name: 'Bengali (Bangladesh)'},
-      {code: 'ta', flag: 'in', name: 'Tamil (India)'},
-      {code: 'te', flag: 'in', name: 'Telugu (India)'},
-      {code: 'mr', flag: 'in', name: 'Marathi (India)'},
-      {code: 'gu', flag: 'in', name: 'Gujarati (India)'},
-      {code: 'kn', flag: 'in', name: 'Kannada (India)'},
-      {code: 'ml', flag: 'in', name: 'Malayalam (India)'},
-      {code: 'pa', flag: 'in', name: 'Punjabi (India)'},
-      {code: 'ur', flag: 'pk', name: 'Urdu (Pakistan)'},
-      {code: 'fa', flag: 'ir', name: 'Persian (Iran)'},
-      {code: 'he', flag: 'il', name: 'Hebrew (Israel)'},
-      {code: 'el', flag: 'gr', name: 'Greek (Greece)'},
-      {code: 'cs', flag: 'cz', name: 'Czech (Czech Republic)'},
-      {code: 'sk', flag: 'sk', name: 'Slovak (Slovakia)'},
-      {code: 'hu', flag: 'hu', name: 'Hungarian (Hungary)'},
-      {code: 'ro', flag: 'ro', name: 'Romanian (Romania)'},
-      {code: 'bg', flag: 'bg', name: 'Bulgarian (Bulgaria)'},
-      {code: 'sr', flag: 'rs', name: 'Serbian (Serbia)'},
-      {code: 'hr', flag: 'hr', name: 'Croatian (Croatia)'},
-      {code: 'uk', flag: 'ua', name: 'Ukrainian (Ukraine)'},
-      {code: 'no', flag: 'no', name: 'Norwegian (Norway)'},
-      {code: 'da', flag: 'dk', name: 'Danish (Denmark)'},
-      {code: 'fi', flag: 'fi', name: 'Finnish (Finland)'},
-      {code: 'is', flag: 'is', name: 'Icelandic (Iceland)'},
-      {code: 'af', flag: 'za', name: 'Afrikaans (South Africa)'},
-      {code: 'sw', flag: 'ke', name: 'Swahili (Kenya)'},
-      {code: 'am', flag: 'et', name: 'Amharic (Ethiopia)'},
-      {code: 'zu', flag: 'za', name: 'Zulu (South Africa)'},
-      {code: 'xh', flag: 'za', name: 'Xhosa (South Africa)'},
-      {code: 'ha', flag: 'ng', name: 'Hausa (Nigeria)'},
-      {code: 'yo', flag: 'ng', name: 'Yoruba (Nigeria)'},
-      {code: 'ig', flag: 'ng', name: 'Igbo (Nigeria)'}
-    ];
-
-    // 动态修改下拉菜单选项
-    const select = document.querySelector('.goog-te-combo');
-    if (select) {
-      languages.forEach(lang => {
-        const option = select.querySelector(`option[value="${lang.code}"]`);
-        if (option) {
-          option.text = lang.name;
-          option.style.backgroundImage = `url('https://flagcdn.com/16x12/${lang.flag}.png')`;
-          option.style.backgroundRepeat = 'no-repeat';
-          option.style.backgroundPosition = '5px center';
-          option.style.paddingLeft = '25px';
-        }
-      });
-    }
   }
 </script>
+
+<!-- 加载 Google 翻译组件 -->
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!-- 可选：隐藏 Google logo（仅供学习测试使用，商业不建议） -->
+<style>
+  .goog-logo-link,
+  .goog-te-gadget span {
+    display: none !important;
+  }
+
+  .goog-te-banner-frame.skiptranslate {
+    display: none !important;
+  }
+
+  body {
+    top: 0px !important;
+  }
+
+  .goog-te-gadget {
+    color: transparent !important;
+    font-size: 0px;
+  }
+</style>
+
 
 
 <!---谷歌翻译ENDbruce--->
