@@ -444,27 +444,20 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!-- 🌐Hmooob 右上角语言切换器 -->
-
-<!-- 🌐 左上角语言切换器 -->
-<div id="custom-lang-switch" style="
+<!-- 🌐 简洁右上角语言选择 -->
+<div style="
   position: fixed;
   top: 10px;
-  left: 10px;
+  right: 10px;
   z-index: 9999;
-  background: #ffffffee;
+  background: #fff;
+  padding: 6px 10px;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  padding: 4px 10px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
   font-family: sans-serif;
 ">
-  <select id="langSelector" style="
-    font-size: 14px;
-    border: none;
-    background: transparent;
-    outline: none;
-    cursor: pointer;
-  ">
-    <option value="">🌐 Select-Language</option>
+  <select id="langSwitcher" onchange="translatePage(this.value)" style="font-size: 14px;">
+    <option value="">🌐 Language</option>
     <option value="en">🇺🇸 英语</option>
     <option value="lo">🇱🇦 老挝语</option>
     <option value="th">🇹🇭 泰语</option>
@@ -475,54 +468,44 @@ function gtag_report_conversion(url) {
 </div>
 
 <!-- Google 翻译容器（隐藏） -->
-<div id="google_translate_element" style="display:none;"></div>
+<div id="google_translate_element" style="display: none;"></div>
 
 <!-- Google 翻译初始化 -->
-<script type="text/javascript">
+<script>
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
-      pageLanguage: 'zh-CN', // 默认语言：简体中文
+      pageLanguage: 'zh-CN',
       includedLanguages: 'en,lo,th,hi,my',
       layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
   }
 
-  // 自动翻译函数
-  function triggerTranslation(langCode) {
+  function translatePage(lang) {
     const interval = setInterval(() => {
       const iframe = document.querySelector('iframe.goog-te-menu-frame');
       if (!iframe) return;
 
       const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-      if (!innerDoc) return;
-
-      const langLinks = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
-      for (let i = 0; i < langLinks.length; i++) {
-        const value = langLinks[i].closest('.goog-te-menu2-item').getAttribute('value');
-        if (value === langCode) {
-          langLinks[i].click();
+      const items = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
+      for (let item of items) {
+        const parent = item.closest('.goog-te-menu2-item');
+        const val = parent?.getAttribute('value');
+        if (val === lang) {
+          item.click();
           clearInterval(interval);
-          return;
+          break;
         }
       }
     }, 300);
   }
-
-  // 监听下拉选择
-  document.getElementById("langSelector").addEventListener("change", function () {
-    const lang = this.value;
-    if (!lang) return;
-    triggerTranslation(lang);
-  });
 </script>
 
-<!-- 加载 Google 翻译脚本 -->
+<!-- 加载 Google 翻译 -->
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- 可选：隐藏 Google 翻译 logo 和横幅 -->
+<!-- 可选：隐藏 Google logo 和横幅 -->
 <style>
-  .goog-logo-link,
-  .goog-te-gadget span {
+  .goog-logo-link, .goog-te-gadget span {
     display: none !important;
   }
   .goog-te-banner-frame.skiptranslate {
@@ -530,10 +513,6 @@ function gtag_report_conversion(url) {
   }
   body {
     top: 0px !important;
-  }
-  .goog-te-gadget {
-    font-size: 0;
-    color: transparent;
   }
 </style>
 
