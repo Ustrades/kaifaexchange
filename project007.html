@@ -429,6 +429,86 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="the7_project-template-default single single-the7_project postid-87969 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js no-comments dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-87969 elementor-page-89206">
 <!-- The7 12.3.0 -->
 
+<!-- 🌐Hmooob 右上角语言切换器 -->
+<div id="custom-lang-icon" onclick="toggleTranslator()" style="
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  background: white;
+  border-radius: 50px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+">
+  🌐 Language
+</div>
+
+<!-- Google 翻译容器（默认隐藏） -->
+<div id="google_translate_element" style="
+  position: fixed;
+  top: 50px;
+  right: 10px;
+  z-index: 9999;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  padding: 6px 10px;
+  font-family: sans-serif;
+  font-size: 14px;
+  display: none;
+"></div>
+
+<!-- Google 翻译初始化 -->
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'zh-CN',
+      includedLanguages: 'en,th,lo,vi,hi', // 仅启用指定语言
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+
+  function toggleTranslator() {
+    var el = document.getElementById('google_translate_element');
+    el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+  }
+</script>
+
+<!-- 加载 Google 翻译脚本 -->
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!-- 隐藏 Google logo 和横幅 -->
+<style>
+  .goog-logo-link,
+  .goog-te-gadget span {
+    display: none !important;
+  }
+
+  .goog-te-banner-frame.skiptranslate {
+    display: none !important;
+  }
+
+  body {
+    top: 0px !important;
+  }
+
+  .goog-te-gadget {
+    color: transparent !important;
+    font-size: 0px;
+  }
+</style>
+
+<!---谷歌翻译ENDbruce888-888--->
+
+
+	
 <div id="page" >
 	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
 
