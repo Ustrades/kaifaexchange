@@ -464,25 +464,24 @@ function gtag_report_conversion(url) {
 <script>
 // 初始化 Google 翻译
 function googleTranslateElementInit() {
-  // 确保 Google 翻译对象存在
   if (typeof google !== 'undefined' && google.translate) {
     new google.translate.TranslateElement({
       pageLanguage: 'en', // 默认语言
       includedLanguages: 'en,lo,th,vi,hi', // 支持的语言
-      autoDisplay: true, // 自动显示语言选择
+      autoDisplay: false, // 禁用 Google 默认的选择器
       layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
-    
-    // 强制触发语言选择弹出
+
+    // 自动触发语言选择弹出
     setTimeout(() => {
       var select = document.getElementById('language-select');
+      select.value = 'en'; // 默认英语
+      translatePage('en'); // 初始化翻译为英语
       select.focus();
-      select.dispatchEvent(new Event('click'));
-    }, 500);
+    }, 1000); // 延迟 1 秒确保 API 加载
   } else {
     console.error('Google Translate API failed to load.');
-    // 可选：显示错误提示给用户
-    alert('Failed to load translation service. Please check your network or try again later.');
+    alert('无法加载翻译服务，请检查网络或稍后重试。');
   }
 }
 
@@ -491,18 +490,18 @@ function translatePage(lang) {
   var select = document.getElementById('language-select');
   var flag = select.options[select.selectedIndex].getAttribute('data-flag');
   select.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text x="0" y="15" font-size="15">${flag}</text></svg>')`;
-  
-  // 触发 Google 翻译
-  var translateFrame = document.querySelector('iframe.goog-te-menu-frame');
-  if (translateFrame) {
-    translateFrame.contentWindow.postMessage('{"method":"set","key":"language","value":"' + lang + '"}', '*');
+
+  // 直接调用 Google 翻译 API 的语言切换
+  var translateFrame = document.querySelector('.goog-te-menu-frame');
+  if (translateFrame && typeof google.translate !== 'undefined') {
+    google.translate.TranslateElement.prototype.setLanguage(lang);
   } else {
     // 如果 iframe 未加载，尝试重新初始化
-    googleTranslateElementInit();
+    setTimeout(() => googleTranslateElementInit(), 500);
   }
 }
 
-// 响应式样式和国旗显示
+// 响应式样式和初始化
 document.addEventListener('DOMContentLoaded', function() {
   var select = document.getElementById('language-select');
   select.style.padding = '8px 35px 8px 10px';
@@ -521,13 +520,6 @@ document.addEventListener('DOMContentLoaded', function() {
     select.style.fontSize = '14px';
     select.style.padding = '10px 30px 10px 10px';
   }
-
-  // 监听 Google 翻译 API 加载状态
-  window.addEventListener('message', function(e) {
-    if (e.data && typeof e.data === 'string' && e.data.includes('googleTranslateElementInit')) {
-      translatePage('en'); // 默认翻译为英语
-    }
-  });
 });
 </script>
 
@@ -555,8 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 
-
-<!---谷歌翻译ENDbruce888--->
+<!---谷歌翻译ENDbruce888-888--->
 
 
 
