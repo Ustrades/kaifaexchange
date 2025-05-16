@@ -444,22 +444,82 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!---谷歌翻译Start--->
-<div id="google_translate_element"></div>
+<!-- 多语言切换器（右上角） -->
+<div id="lang-select" style="
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  padding: 6px 10px;
+  font-family: sans-serif;
+">
+  <select onchange="translateLanguage(this.value)" style="
+    font-size: 14px;
+    border: none;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+  ">
+    <option value="">🌐 选择语言</option>
+    <option value="en">🇺🇸 English</option>
+    <option value="zh-CN">🇨🇳 简体中文</option>
+    <option value="zh-TW">🇹🇼 繁體中文</option>
+    <option value="ja">🇯🇵 日本語</option>
+    <option value="ko">🇰🇷 한국어</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="de">🇩🇪 Deutsch</option>
+    <option value="es">🇪🇸 Español</option>
+    <option value="ru">🇷🇺 Русский</option>
+    <option value="pt">🇧🇷 Português</option>
+  </select>
+</div>
 
+<!-- Google 翻译插件隐藏挂载点 -->
+<div id="google_translate_element" style="display:none;"></div>
+
+<!-- Google 翻译初始化脚本 -->
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
-      pageLanguage: 'zh-CN', // 原始页面语言（可改为你的网站默认语言）
-      includedLanguages: '', // 留空表示允许所有语言
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      pageLanguage: 'zh-CN',
       autoDisplay: false
     }, 'google_translate_element');
   }
+
+  function translateLanguage(lang) {
+    const select = document.querySelector('.goog-te-combo');
+    if (select) {
+      select.value = lang;
+      select.dispatchEvent(new Event('change'));
+    }
+  }
 </script>
 
+<!-- 加载 Google 翻译脚本 -->
 <script type="text/javascript" 
   src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
 </script>
+
+<!-- 隐藏 Google logo（仅限学习/测试用） -->
+<style>
+  .goog-logo-link,
+  .goog-te-gadget span {
+    display: none !important;
+  }
+  .goog-te-banner-frame.skiptranslate {
+    display: none !important;
+  }
+  body {
+    top: 0px !important;
+  }
+  .goog-te-gadget {
+    color: transparent !important;
+  }
+</style>
+
 <!---谷歌翻译END--->
 
 
