@@ -444,8 +444,8 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!-- 🌐Hmooob 右上角语言切换器 -->
-<!-- 语言切换器容器 -->
-<div id="language-switcher" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
+
+<div id="language-switcher" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">
   <select id="language-select" onchange="translatePage(this.value)">
     <option value="en" data-flag="🇺🇳">English</option>
     <option value="lo" data-flag="🇱🇦">ພາສາລາວ</option>
@@ -466,37 +466,39 @@ function gtag_report_conversion(url) {
 function googleTranslateElementInit() {
   if (typeof google !== 'undefined' && google.translate) {
     new google.translate.TranslateElement({
-      pageLanguage: 'en', // 默认语言
+      pageLanguage: 'auto', // 自动检测页面语言
       includedLanguages: 'en,lo,th,vi,hi', // 支持的语言
-      autoDisplay: false, // 禁用 Google 默认的选择器
+      autoDisplay: false, // 禁用默认 Google 翻译工具栏
       layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
 
-    // 自动触发语言选择弹出
+    // 默认翻译为英语并弹出选择框
     setTimeout(() => {
       var select = document.getElementById('language-select');
-      select.value = 'en'; // 默认英语
-      translatePage('en'); // 初始化翻译为英语
+      select.value = 'en';
+      translatePage('en');
       select.focus();
-    }, 1000); // 延迟 1 秒确保 API 加载
+      select.dispatchEvent(new Event('change')); // 触发翻译
+    }, 1000);
   } else {
     console.error('Google Translate API failed to load.');
-    alert('无法加载翻译服务，请检查网络或稍后重试。');
+    alert('无法加载翻译服务，请检查网络连接或稍后重试。');
   }
 }
 
-// 动态翻译页面
+// 翻译整个页面
 function translatePage(lang) {
   var select = document.getElementById('language-select');
   var flag = select.options[select.selectedIndex].getAttribute('data-flag');
   select.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text x="0" y="15" font-size="15">${flag}</text></svg>')`;
 
-  // 直接调用 Google 翻译 API 的语言切换
-  var translateFrame = document.querySelector('.goog-te-menu-frame');
-  if (translateFrame && typeof google.translate !== 'undefined') {
-    google.translate.TranslateElement.prototype.setLanguage(lang);
+  // 使用 Google 翻译 API 切换语言
+  var translateCombo = document.querySelector('.goog-te-combo');
+  if (translateCombo) {
+    translateCombo.value = lang;
+    translateCombo.dispatchEvent(new Event('change')); // 触发 Google 翻译
   } else {
-    // 如果 iframe 未加载，尝试重新初始化
+    // 如果翻译控件未加载，尝试重新初始化
     setTimeout(() => googleTranslateElementInit(), 500);
   }
 }
@@ -511,9 +513,9 @@ document.addEventListener('DOMContentLoaded', function() {
   select.style.borderRadius = '6px';
   select.style.fontSize = '16px';
   select.style.cursor = 'pointer';
-  select.style.border = '1px solid #ccc';
+  select.style.border = '1px solid #ddd';
   select.style.backgroundColor = '#fff';
-  select.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+  select.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
 
   // 移动端优化
   if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
