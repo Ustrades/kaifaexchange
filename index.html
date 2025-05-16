@@ -444,62 +444,53 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!-- 🌐Hmooob 右上角语言切换器 -->
-<!-- 🌐 简单语言切换菜单 -->
-<div style="position:fixed; top:10px; left:10px; z-index:9999; background:#fff; padding:5px 10px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.2); font-family:sans-serif;">
-  <select onchange="translatePage(this.value)" style="border:none; font-size:14px; cursor:pointer;">
-    <option value="">🌐 Language</option>
-    <option value="en">🇺🇸 英语</option>
-    <option value="lo">🇱🇦 老挝语</option>
-    <option value="th">🇹🇭 泰语</option>
-    <option value="hi">🇮🇳 印地语</option>
-    <option value="my">🇲🇲 缅甸语</option>
-    <option value="en">🇸🇬 新加坡语</option>
-  </select>
-</div>
+<!-- 挂载点：右上角语言选择器 -->
+<div id="google_translate_element" style="
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  padding: 6px 10px;
+  font-family: sans-serif;
+  font-size: 14px;
+"></div>
 
-<!-- 隐藏 Google 翻译容器 -->
-<div id="google_translate_element" style="display:none;"></div>
-
-<!-- Google 翻译脚本初始化 -->
+<!-- 初始化 Google 翻译（内含全球语言） -->
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
-      pageLanguage: 'zh-CN',
-      includedLanguages: 'en,lo,th,hi,my',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      pageLanguage: 'zh-CN', // 如果你的网站默认是英文请改为 'en'
+      includedLanguages: '', // 留空表示启用所有支持语言
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
     }, 'google_translate_element');
-  }
-
-  function translatePage(lang) {
-    const interval = setInterval(() => {
-      const iframe = document.querySelector('iframe.goog-te-menu-frame');
-      if (!iframe) return;
-
-      const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-      const langItems = innerDoc.querySelectorAll('.goog-te-menu2-item');
-
-      langItems.forEach(item => {
-        if (item.getAttribute('value') === lang) {
-          item.click();
-          clearInterval(interval);
-        }
-      });
-    }, 300);
   }
 </script>
 
-<!-- 加载 Google 翻译服务 -->
+<!-- 加载 Google 翻译组件 -->
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- 可选：隐藏 Google Logo 和横幅 -->
+<!-- 可选：隐藏 Google logo（仅供学习测试使用，商业不建议） -->
 <style>
   .goog-logo-link,
-  .goog-te-gadget span,
+  .goog-te-gadget span {
+    display: none !important;
+  }
+
   .goog-te-banner-frame.skiptranslate {
     display: none !important;
   }
+
   body {
     top: 0px !important;
+  }
+
+  .goog-te-gadget {
+    color: transparent !important;
+    font-size: 0px;
   }
 </style>
 
