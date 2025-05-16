@@ -444,54 +444,72 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!---谷歌翻译Start--->
-<!-- 挂载点：右上角语言选择器 -->
-<div id="google_translate_element" style="
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 9999;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  padding: 6px 10px;
-  font-family: sans-serif;
-  font-size: 14px;
-"></div>
-
-<!-- 初始化 Google 翻译（内含全球语言） -->
+<div id="google_translate_element" style="position: fixed; top: 10px; right: 10px; z-index: 1000;"></div>
 <script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'zh-CN', // 如果你的网站默认是英文请改为 'en'
-      includedLanguages: '', // 留空表示启用所有支持语言
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-      autoDisplay: false
-    }, 'google_translate_element');
-  }
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,zh-CN,es,hi,ar,fr,de,ja,ko,ru,pt,it,th,vi,id,ms,bn,ta,te,pa,ur,fa,gu,kn,ml,or,si,uk,pl,el,he,sw,tr',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+
+  // Customize the dropdown to include flags
+  setTimeout(function() {
+    var select = document.querySelector('#google_translate_element select');
+    if (select) {
+      select.style.padding = '5px';
+      select.style.border = '1px solid #ccc';
+      select.style.borderRadius = '5px';
+      select.style.background = 'white';
+      select.style.fontSize = '14px';
+
+      // Add flags to options
+      var flagMap = {
+        'en': '🇬🇧', 'zh-CN': '🇨🇳', 'es': '🇪🇸', 'hi': '🇮🇳', 'ar': '🇸🇦', 'fr': '🇫🇷', 
+        'de': '🇩🇪', 'ja': '🇯🇵', 'ko': '🇰🇷', 'ru': '🇷🇺', 'pt': '🇧🇷', 'it': '🇮🇹', 
+        'th': '🇹🇭', 'vi': '🇻🇳', 'id': '🇮🇩', 'ms': '🇲🇾', 'bn': '🇧🇩', 'ta': '🇮🇳', 
+        'te': '🇮🇳', 'pa': '🇮🇳', 'ur': '🇵🇰', 'fa': '🇮🇷', 'gu': '🇮🇳', 'kn': '🇮🇳', 
+        'ml': '🇮🇳', 'or': '🇮🇳', 'si': '🇱🇰', 'uk': '🇺🇦', 'pl': '🇵🇱', 'el': '🇬🇷', 
+        'he': '🇮🇱', 'sw': '🇰🇪', 'tr': '🇹🇷'
+      };
+
+      Array.from(select.options).forEach(option => {
+        var langCode = option.value;
+        if (flagMap[langCode]) {
+          option.text = flagMap[langCode] + ' ' + option.text;
+        }
+      });
+
+      // Ensure responsiveness
+      select.style.maxWidth = '150px';
+      select.style.width = '100%';
+      select.style.boxSizing = 'border-box';
+    }
+  }, 500);
+}
 </script>
-
-<!-- 加载 Google 翻译组件 -->
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-<!-- 可选：隐藏 Google logo（仅供学习测试使用，商业不建议） -->
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <style>
-  .goog-logo-link,
-  .goog-te-gadget span {
-    display: none !important;
-  }
+#google_translate_element select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 25px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5"><path d="M0 0h10l-5 5z" fill="%23333"/></svg>') no-repeat right 10px center;
+  background-size: 10px;
+}
 
-  .goog-te-banner-frame.skiptranslate {
-    display: none !important;
+@media (max-width: 600px) {
+  #google_translate_element {
+    top: 5px;
+    right: 5px;
   }
-
-  body {
-    top: 0px !important;
+  #google_translate_element select {
+    font-size: 12px;
+    max-width: 120px;
   }
-
-  .goog-te-gadget {
-    color: transparent !important;
-    font-size: 0px;
-  }
+}
 </style>
 
 
