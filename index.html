@@ -444,15 +444,16 @@ function gtag_report_conversion(url) {
 <body id="the7-body" class="home page-template page-template-elementor_header_footer page page-id-15686 wp-custom-logo wp-embed-responsive theme-dt-the7 the7-core-ver-2.7.10 woocommerce-no-js dt-responsive-on right-mobile-menu-close-icon ouside-menu-close-icon mobile-close-right-caption  fade-thin-mobile-menu-close-icon fade-medium-menu-close-icon srcset-enabled btn-flat custom-btn-color custom-btn-hover-color first-switch-logo-left first-switch-menu-right second-switch-logo-left second-switch-menu-right right-mobile-menu layzr-loading-on popup-message-style the7-ver-12.3.0 elementor-default elementor-template-full-width elementor-clear-template elementor-kit-3346 elementor-page elementor-page-15686">
 <!-- The7 12.3.0 -->
 <!-- 右上角语言切换器 -->
+<!-- 🌐 语言切换器放右上角 -->
 <div id="custom-lang-switch" style="
   position: fixed;
   top: 10px;
   right: 10px;
   z-index: 9999;
-  background: #fff;
-  border-radius: 8px;
+  background: #ffffffee;
+  border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  padding: 6px 10px;
+  padding: 4px 10px;
   font-family: sans-serif;
 ">
   <select id="langSelector" style="
@@ -464,61 +465,60 @@ function gtag_report_conversion(url) {
   ">
     <option value="">🌐 Select-Language</option>
     <option value="zh-CN">🇨🇳 中文</option>
-    <option value="lo">🇱🇦 ພາສາລາວ</option>
-    <option value="th">🇹🇭 ภาษาไทย</option>
-    <option value="en">🇺🇸 English</option>
-    <option value="vi">🇻🇳 Tiếng Việt</option>
-    <option value="hmn">🇲🇲 Hmoob</option>
+    <option value="lo">🇱🇦 老挝语</option>
+    <option value="th">🇹🇭 泰语</option>
+    <option value="en">🇺🇸 英语</option>
+    <option value="vi">🇻🇳 越南语</option>
+    <option value="hmn">🇲🇲 苗语</option>
   </select>
 </div>
 
-<!-- Google 翻译挂载点（隐藏） -->
-<div id="google_translate_element" style="display:none;"></div>
+<!-- Google 翻译容器 -->
+<div id="google_translate_element" style="display: none;"></div>
 
-<!-- Google 翻译初始化 -->
+<!-- Google 翻译脚本 -->
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'zh-CN',
       includedLanguages: 'zh-CN,lo,th,en,vi,hmn',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-      autoDisplay: false
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
   }
 
-  // 等待 Google 翻译 select 准备好
-  function waitForTranslateCombo(lang) {
-    const maxWait = 5000; // 最多等5秒
-    const start = Date.now();
+  // 模拟 Google 翻译 select 行为
+  function changeLang(lang) {
+    const iframe = document.querySelector('iframe.goog-te-menu-frame');
+    if (!iframe) {
+      console.warn("翻译框架尚未加载");
+      return;
+    }
+    const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    const langLinks = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
 
-    function trySetLang() {
-      const gtCombo = document.querySelector('.goog-te-combo');
-      if (gtCombo) {
-        gtCombo.value = lang;
-        gtCombo.dispatchEvent(new Event('change'));
-      } else {
-        if (Date.now() - start < maxWait) {
-          setTimeout(trySetLang, 100);
-        } else {
-          console.warn("Google 翻译组件加载失败。");
-        }
+    for (let i = 0; i < langLinks.length; i++) {
+      const text = langLinks[i].innerText || langLinks[i].textContent;
+      if (text.toLowerCase().includes(lang.toLowerCase())) {
+        langLinks[i].click();
+        break;
       }
     }
-
-    trySetLang();
   }
 
-  // 切换语言时调用
-  document.getElementById("langSelector").addEventListener("change", function () {
-    const lang = this.value;
-    if (lang) waitForTranslateCombo(lang);
+  // 监听选择语言
+  document.getElementById('langSelector').addEventListener('change', function () {
+    const val = this.value;
+    if (!val) return;
+    setTimeout(() => {
+      changeLang(val);
+    }, 500); // 稍等让 iframe 加载
   });
 </script>
 
-<!-- 加载 Google 翻译 -->
+<!-- 加载 Google 翻译服务 -->
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- 隐藏 Google logo（仅测试用途） -->
+<!-- 隐藏 Google logo（非必要，可移除） -->
 <style>
   .goog-logo-link,
   .goog-te-gadget span {
@@ -531,14 +531,15 @@ function gtag_report_conversion(url) {
     top: 0px !important;
   }
   .goog-te-gadget {
-    color: transparent !important;
     font-size: 0;
+    color: transparent;
   }
 </style>
 
 
 
-<!---谷歌翻译ENDbruce--->
+
+<!---谷歌翻译ENDbruce888--->
 
 
 
